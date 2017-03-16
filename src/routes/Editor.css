@@ -1,34 +1,13 @@
-html,
-body {
-	position: relative;
-	padding: 0;
-	margin: 0;
+.page_editor {
+	height: 100%;
 }
 
-.normal {
-	font-family: Georgia, sans-serif;
-	text-align: center;
+.page_slider {
+	background: #fff;
 }
 
-.title {
-	font-size: 2.5rem;
-	font-weight: normal;
-	letter-spacing: -1px;
-}
-
-.welcome {
-	height: 328px;
-	background: url(../assets/yay.jpg) no-repeat center 0;
-	background-size: 388px 328px;
-}
-
-.list {
-	font-size: 1.2em;
-	margin-top: 1.8em;
-	list-style: none;
-	line-height: 1.5em;
-}
-
-.list code {
-	background: #f7f7f7;
+.page_content {
+	background: '#fff';
+	padding: 24px;
+	margin: 0
 }

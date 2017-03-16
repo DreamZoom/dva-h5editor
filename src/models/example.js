@@ -1,4 +1,4 @@
-import Guid from '../utils/guid';
+import uuid from '../utils/uuid';
 export default {
 
   namespace: 'h5',
@@ -7,7 +7,9 @@ export default {
   	 config:{
   	 	
   	 },
-  	 pages:[]
+  	 pages:[],
+  	 selected_page:"",
+  	 selected_shape:""
   },
 
   subscriptions: {
@@ -24,7 +26,7 @@ export default {
   reducers: {
     addNewPage(state, action) {
     	state.pages.push({
-    		  guid:Guid.NewGuid(),
+    		    guid:uuid.NewID(),
     			title:"new page",
     			shapes:[],
     			propertys:{
@@ -32,9 +34,13 @@ export default {
     				backgroundColor:""
     			}
     	});
+    	console.log(state);
       return {...state};
     },
-    
+    selectPage(state, action){
+  		state.selected_page=action.page.guid;
+    	return {...state};
+    },
     removePage(state, action){
     	state.pages = state.pages.filter((page)=>{return page.guid!=action.guid});
     	return {...state};
