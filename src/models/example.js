@@ -56,7 +56,11 @@ export default {
 					type: action.type,
 					propertys: {
 						backgroundImage: "",
-						backgroundColor: ""
+						backgroundColor: "",
+						left:250,
+						top:250,
+						width:100,
+						height:100
 					},
 					animations: [],
 					resource: "在此输入文本"
