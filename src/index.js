@@ -6,7 +6,10 @@ const app = dva({
 	initialState: {
 		h5: {
 			config: {
-
+				size:{
+					width:360,
+					height:640
+				}
 			},
 			pages: [{
 				guid:"ssssssssssssssssssss",
