@@ -4,7 +4,7 @@ import styles from './Editor.css';
 import PageList from '../components/PageList.js';
 import ContentEditor from '../components/ContentEditor.js';
 import ResourceList from '../components/ResourceList.js';
-import { Layout, Menu, Breadcrumb, Icon, Button,Modal ,Input,Table} from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Button,Modal ,Input,Table,Upload,message} from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 
 function Editor({ dispatch, h5 }) {
@@ -17,10 +17,31 @@ function Editor({ dispatch, h5 }) {
         </Modal>
 	);
 	
-	
+	const upload_props = {
+	  name: 'resource',
+	  action: 'http://localhost:6531/resource/UploadResource?res_type=image',
+	  headers: {
+	    authorization: 'authorization-text',
+	  },
+	  onChange(info) {
+	    if (info.file.status !== 'uploading') {
+	      console.log(info.file, info.fileList);
+	    }
+	    if (info.file.status === 'done') {
+	      message.success(`${info.file.name} file uploaded successfully`);
+	    } else if (info.file.status === 'error') {
+	      message.error(`${info.file.name} file upload failed.`);
+	    }
+	  },
+	};
 
 	const ResourcesEditModal=(
 		<Modal title="编辑内容" visible={h5.resource_editor_visible} onOk={()=>{dispatch({type: 'h5/endEditShape'})}} onCancel={()=>{dispatch({type: 'h5/endEditShape'})}}>
+          <Upload {...upload_props}>
+		    <Button>
+		      <Icon type="upload" /> Click to Upload
+		    </Button>
+		  </Upload>
           <ResourceList />
         </Modal>
 	);
