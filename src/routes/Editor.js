@@ -3,10 +3,28 @@ import { connect } from 'dva';
 import styles from './Editor.css';
 import PageList from '../components/PageList.js';
 import ContentEditor from '../components/ContentEditor.js';
-import { Layout, Menu, Breadcrumb, Icon, Button } from 'antd';
+import ResourceList from '../components/ResourceList.js';
+import { Layout, Menu, Breadcrumb, Icon, Button,Modal ,Input,Table} from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 
 function Editor({ dispatch, h5 }) {
+	
+
+	
+	const TextEditModal=(
+		<Modal title="编辑内容" visible={h5.text_editor_visible} onOk={()=>{dispatch({type: 'h5/endEditShape'})}} onCancel={()=>{dispatch({type: 'h5/endEditShape'})}}>
+          <Input type="textarea" placeholder="请输入内容" autosize value={h5.selected_shape_model?h5.selected_shape_model.resource:""} onChange={(evt)=>{dispatch({type: 'h5/updateShapeContent',resource: evt.target.value})}}/>
+        </Modal>
+	);
+	
+	
+
+	const ResourcesEditModal=(
+		<Modal title="编辑内容" visible={h5.resource_editor_visible} onOk={()=>{dispatch({type: 'h5/endEditShape'})}} onCancel={()=>{dispatch({type: 'h5/endEditShape'})}}>
+          <ResourceList />
+        </Modal>
+	);
+	
 
 	return(
 		<Layout className={styles.page_editor}>
@@ -30,9 +48,11 @@ function Editor({ dispatch, h5 }) {
 		        <Content className={styles.page_content}>
 		            <div className={styles.document_main}>
 			        	<div className={styles.page_main}>
-			              <ContentEditor page={h5.selected_page_model}  size={h5.config.size}></ContentEditor>
+			              <ContentEditor page={h5.selected_page_model} selected_shape={h5.selected_shape}  size={h5.config.size} onSelectShape={(shape)=>{dispatch({type: 'h5/selectShape',shape:shape})}} onEditShape={(shape)=>{dispatch({type: 'h5/editShape',shape:shape})}}></ContentEditor>
 			            </div>
 		            </div>
+		            {TextEditModal}
+		            {ResourcesEditModal}
 		        </Content>
 		      </Layout>
 		    </Layout>
