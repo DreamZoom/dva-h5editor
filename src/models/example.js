@@ -59,10 +59,10 @@ export default {
 					propertys: {
 						backgroundImage: "",
 						backgroundColor: "",
-						left:250,
-						top:250,
-						width:100,
-						height:100,
+						left:0,
+						top:0,
+						color:"rgba(0,0,0,1)",
+						fontSize:14,
 						rotate:0
 					},
 					animations: [],
@@ -85,7 +85,8 @@ export default {
 			}
 			if(action.shape.shape_type=="image"||action.shape.shape_type=="video"||action.shape.shape_type=="music"){
 				state.resource_editor_visible = true;
-				state.resource_editor_type=action.shape.type;
+				state.resource_editor_type=action.shape.shape_type;
+				
 			}
 			return { ...state };
 		},
@@ -98,7 +99,9 @@ export default {
 			state.selected_shape_model.resource=action.resource;
 			return { ...state };
 		},
-		
+		updateResource(state, action){
+			return { ...state };
+		}
 
 	},
 

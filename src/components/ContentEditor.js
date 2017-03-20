@@ -1,6 +1,17 @@
 import styles from './ContentEditor.css';
 import EditableShape from "./EditableShape.js"
+import siteconfig from "../utils/siteconfig.js"
+
 class ContentEditor extends React.Component {
+	
+	renderContent=(shape)=>{
+		if(shape.shape_type=="text"){
+			return (<div>{shape.resource}</div>)
+		}
+		if(shape.shape_type=="image"){
+			return (<img src={siteconfig.URL(shape.resource)} />)
+		}
+	}
 
 	render() {
 		const { size,page,selected_shape,onSelectShape,onEditShape} = this.props;
@@ -13,15 +24,19 @@ class ContentEditor extends React.Component {
 			);
 		}
 		
+	    
 		
         const that = this;
 		const shapeElements = page.shapes.map(function(shape,i){
+			
 			return(	
 				<EditableShape key={i} shape={shape} active={shape.guid==selected_shape} 
 					onClick={()=>{onSelectShape(shape)}}
 					onEditContent={()=>{onEditShape(shape)}}
 					>
-				  <div className={styles.shape_content}>{shape.resource}</div>
+				  <div className={styles.shape_content}>
+				  	{that.renderContent(shape)}
+				  </div>
 				</EditableShape>
 			);
 		})

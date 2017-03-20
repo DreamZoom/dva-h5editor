@@ -4,7 +4,11 @@ import styles from './Editor.css';
 import PageList from '../components/PageList.js';
 import ContentEditor from '../components/ContentEditor.js';
 import ResourceList from '../components/ResourceList.js';
-import { Layout, Menu, Breadcrumb, Icon, Button,Modal ,Input,Table,Upload,message} from 'antd';
+import PropertyGrid from '../components/PropertyGrid.js';
+import AnimationList from '../components/AnimationList.js';
+
+import { Layout, Menu, Breadcrumb, Icon, Button,Modal ,Input,Table,Upload,message,Tabs} from 'antd';
+const TabPane = Tabs.TabPane;
 const { Header, Content, Footer, Sider } = Layout;
 
 function Editor({ dispatch, h5 }) {
@@ -19,34 +23,39 @@ function Editor({ dispatch, h5 }) {
 	
 	const upload_props = {
 	  name: 'resource',
-	  action: 'http://localhost:6531/resource/UploadResource?res_type=image',
+	  action: 'http://localhost:6531/resource/UploadResource',
 	  headers: {
 	    authorization: 'authorization-text',
+	  },
+	  data:{
+	  	res_type:h5.resource_editor_type
 	  },
 	  onChange(info) {
 	    if (info.file.status !== 'uploading') {
 	      console.log(info.file, info.fileList);
 	    }
 	    if (info.file.status === 'done') {
-	      message.success(`${info.file.name} file uploaded successfully`);
+	      message.success(`${info.file.name} 文件上传成功`);
+	      dispatch({type: 'h5/updateResource'});
 	    } else if (info.file.status === 'error') {
-	      message.error(`${info.file.name} file upload failed.`);
+	      message.error(`${info.file.name} 文件上传失败.`);
 	    }
 	  },
 	};
 
 	const ResourcesEditModal=(
 		<Modal title="编辑内容" visible={h5.resource_editor_visible} onOk={()=>{dispatch({type: 'h5/endEditShape'})}} onCancel={()=>{dispatch({type: 'h5/endEditShape'})}}>
-          <Upload {...upload_props}>
-		    <Button>
-		      <Icon type="upload" /> Click to Upload
-		    </Button>
-		  </Upload>
-          <ResourceList />
+		  <div className={styles.padding}>
+	          <Upload {...upload_props} showUploadList={false}>
+			    <Button>
+			      <Icon type="upload" />上传资源
+			    </Button>
+			  </Upload>
+		  </div>
+          <ResourceList onSelectResource={(res)=>{dispatch({type: 'h5/updateShapeContent',resource: res.ResContent});dispatch({type: 'h5/endEditShape',resource: res.ResContent})}} />
         </Modal>
 	);
 	
-
 	return(
 		<Layout className={styles.page_editor}>
 		    <Header>
@@ -76,6 +85,17 @@ function Editor({ dispatch, h5 }) {
 		            {ResourcesEditModal}
 		        </Content>
 		      </Layout>
+		      <Sider className={styles.page_slider}>
+		        <Tabs defaultActiveKey="1" >
+				    <TabPane tab="属性" key="1">
+				    	<PropertyGrid shape={h5.selected_shape_model} onPropertyChange={()=>{dispatch({type: 'h5/updateResource'})}} />
+				    </TabPane>
+				    <TabPane tab="动画" key="2">
+				    	<AnimationList shape={h5.selected_shape_model} onAnimationChange={()=>{dispatch({type: 'h5/updateResource'})}}/>
+				    </TabPane>
+				</Tabs>
+		       	
+		      </Sider>
 		    </Layout>
 		</Layout>
 

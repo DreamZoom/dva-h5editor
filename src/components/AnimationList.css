@@ -1,0 +1,9 @@
+.padding_button{
+	padding: 10px;
+}
+
+.panel_list{
+}
+.panel_list .ant-collapse-header{
+	background: #CCD5DB;
+}

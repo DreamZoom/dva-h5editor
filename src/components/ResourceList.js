@@ -1,20 +1,7 @@
 import { Layout, Menu, Breadcrumb, Icon, Button,Modal ,Input,Table} from 'antd';
 import jquery from 'jquery';
 import request from "../utils/request.js";
-const columns = [{
-  title: '资源名称',
-  dataIndex: 'ResName',
-  sorter: true
-},{
-  title: '资源内容',
-  dataIndex: 'ResContent'
-},{
-	  title: '操作',
-	  key: 'action',
-	  render: (text, record) => (
-	    <Button>使用</Button>
-	  ),
-}];
+
 class ResourceList extends React.Component {
 	state = {
 	    data: [],
@@ -24,11 +11,12 @@ class ResourceList extends React.Component {
 	handleTableChange = (pagination, filters, sorter) => {
 	    const pager = { ...this.state.pagination };
 	    pager.current = pagination.current;
+	    pagination.pageSize = 5;
 	    this.setState({
 	      pagination: pager,
 	    });
 	    this.fetch({
-	      results: pagination.pageSize,
+	      pagesize: pagination.pageSize,
 	      page: pagination.current,
 	      sortField: sorter.field,
 	      sortOrder: sorter.order,
@@ -42,8 +30,7 @@ class ResourceList extends React.Component {
 	      url: 'http://localhost:6531/resource/List',
 	      method: 'get',
 	      data: {
-	        pagesize: 10,
-	        ...params,
+	        ...params
 	      },
 	      dataType: "jsonp",
 	    }).then((response) => {
@@ -61,18 +48,35 @@ class ResourceList extends React.Component {
   	componentDidMount() {
     	this.fetch();
   	}
-	render() {
-		
-		return (
-	      <Table columns={columns}
-	        rowKey={record => record.ID}
-	        dataSource={this.state.data}
-	        pagination={this.state.pagination}
-	        loading={this.state.loading}
-	        onChange={this.handleTableChange}
-	      />
-	    );
-	}
+		render() {
+			
+			const { onSelectResource} = this.props;
+			
+			const columns = [{
+			  title: '资源名称',
+			  dataIndex: 'ResName',
+			  sorter: true
+			},{
+			  title: '资源内容',
+			  dataIndex: 'ResContent'
+			},{
+				  title: '操作',
+				  key: 'action',
+				  render: (text, record) => (
+				    <Button onClick={()=>{onSelectResource(record)}} >使用</Button>
+				  ),
+			}];
+			
+			return (
+		      <Table columns={columns}
+		        rowKey={record => record.ID}
+		        dataSource={this.state.data}
+		        pagination={this.state.pagination}
+		        loading={this.state.loading}
+		        onChange={this.handleTableChange}
+		      />
+		    );
+		}
 }
 
 export default ResourceList;
