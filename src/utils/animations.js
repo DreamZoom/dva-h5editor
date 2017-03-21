@@ -1,0 +1,22 @@
+export default {
+   ANIMATION_LIST:[
+   		{
+   			groupName:"进入",
+   			animations:[
+   				{name:"fadeIn",text:"淡入"}
+   			]
+   		},
+   		{
+   			groupName:"强调",
+   			animations:[
+   				{name:"wake",text:"摇摆"}
+   			]
+   		},
+   		{
+   			groupName:"退出",
+   			animations:[
+   				{name:"fadeOut",text:"淡出"}
+   			]
+   		}
+   ]
+}
