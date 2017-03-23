@@ -86,6 +86,7 @@ function Editor({ dispatch, h5 }) {
 		        <Content className={styles.page_content} >
 		            <ResponsiveWarpper className={styles.document_main} documentSize={h5.config.size}>
 			        	 <ContentEditor page={h5.selected_page_model} selected_shape={h5.selected_shape}  size={h5.config.size} onSelectShape={(shape)=>{dispatch({type: 'h5/selectShape',shape:shape})}} onEditShape={(shape)=>{dispatch({type: 'h5/editShape',shape:shape})}} />
+			        	 
 		            </ResponsiveWarpper>
 		            
 		        </Content>
