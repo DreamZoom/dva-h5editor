@@ -7,7 +7,7 @@ const app = dva({
 		h5: {
 			config: {
 				size:{
-					width:360,
+					width:366,
 					height:640
 				}
 			},

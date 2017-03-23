@@ -14,7 +14,8 @@ export default {
 		selected_page: "",
 		selected_shape: "",
 		text_editor_visible:false,
-		resource_editor_visible:false
+		resource_editor_visible:false,
+		document_scale:1.0
 	},
 
 	subscriptions: {
@@ -29,14 +30,20 @@ export default {
 	},
 
 	reducers: {
+		resizeDocument(state, action) {
+			//state.document_scale = action.scale;
+			console.log(12456)
+			return { ...state };
+		},
 		addNewPage(state, action) {
 			state.pages.push({
 				guid: uuid.NewID(),
 				title: "new page" + uuid.NewID(),
 				shapes: [],
 				propertys: {
-					backgroundImage: "",
-					backgroundColor: ""
+					backgroundColor: "",
+					backgroundImage: "",					
+					backgroundMusic:"",
 				}
 			});
 			return { ...state };
@@ -66,16 +73,17 @@ export default {
 						rotate:0
 					},
 					animations: [],
-					resource: "在此输入文本"
+					resource: "在此输入文本",
+					preview_animation:""
 
 				});
 			}
-			console.log(state.selected_page_model);
+			
 			return { ...state };
 		},
 		selectShape(state, action){
 			state.selected_shape = action.shape.guid;		
-			state.selected_shape_model = action.shape;			
+			state.selected_shape_model = action.shape;	
 			return { ...state };
 		},
 		editShape(state, action){

@@ -30,7 +30,6 @@ export default {
 				type:meta.type
 			})
 		}
-		console.log(propertys);
 		return propertys;
 
 	}

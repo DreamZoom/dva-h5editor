@@ -3,6 +3,8 @@ import { Resizable, ResizableBox } from 'react-resizable';
 import jquery from 'jquery';
 import styles from './ContentEditor.css';
 import resizeableStyles from './Resizeable.css';
+import animations from "../utils/animations.js"
+
 class EditableShape extends React.Component {
     
     state={
@@ -10,7 +12,6 @@ class EditableShape extends React.Component {
     	postion:{left:0,top:0,width:0,height:0}
     }
     onMouseDown=(e)=>{
-    	
     	const that = this;
     	const onMouseMove=(e)=>{
 	    	const px = e.pageX-that.state.postion.left;
@@ -135,10 +136,9 @@ class EditableShape extends React.Component {
     }
     
 	render() {
-		const { page,num,active,onClick,onEditContent } = this.props;
-		
+		const { shape,num,active,onClick,onEditContent,animation } = this.props;
 		const resizeHandle=(
-			<div className={resizeableStyles.resizable_selected}>
+			<div className={resizeableStyles.resizable_selected} >
 				<div className={resizeableStyles.rotate_circle} onMouseDown={this.onRoateStart}></div>
 				<div className={resizeableStyles.rotate_line}></div>
 				
@@ -162,14 +162,21 @@ class EditableShape extends React.Component {
 		);
 		
 		const {rotate}=this.state.propertys;
+		const animation_style = {"animation":animation};
 		const custom_styles ={transform:"rotateZ("+rotate+"deg)",...this.state.propertys}
 		
 		return(	
-			<div ref="dragElement" className={styles.shape} style={custom_styles} onMouseDown={this.onMouseDown} onClick={(onClick)} onDoubleClick={onEditContent} >
-				{this.props.children}
+			<div ref="dragElement" className={"shape "+styles.shape+(active?" selected":"")} style={custom_styles} onMouseDown={this.onMouseDown} onClick={onClick} onDoubleClick={onEditContent} >
+				<div className="element_content_warpper animation" style={animation_style}>
+					{this.props.children}
+				</div>
 				{active?resizeHandle:""}
 			</div>
 		);
+	}
+	
+	componentDidUpdate(){
+		jquery(this.refs.dragElement).attr("data-animations",animations.getAnimations(this.props.shape.animations));
 	}
 }
 

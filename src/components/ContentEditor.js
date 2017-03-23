@@ -18,8 +18,8 @@ class ContentEditor extends React.Component {
 		
 		if(!page){
 			return(					
-				<div className={styles.document_warpper} style={size}>
-				    <h3 style={{textAlign:"center",marginTop:"50%"}}>请选择页面编辑</h3>
+				<div className={styles.page_warpper} style={size}>
+				    <h3 style={{textAlign:"center",fontSize:24}}>请选择页面编辑</h3>
 				</div>	
 			);
 		}
@@ -30,10 +30,9 @@ class ContentEditor extends React.Component {
 		const shapeElements = page.shapes.map(function(shape,i){
 			
 			return(	
-				<EditableShape key={i} shape={shape} active={shape.guid==selected_shape} 
+				<EditableShape key={i} shape={shape} active={shape.guid==selected_shape} animation={shape.preview_animation}
 					onClick={()=>{onSelectShape(shape)}}
-					onEditContent={()=>{onEditShape(shape)}}
-					>
+					onEditContent={()=>{onEditShape(shape)}}>
 				  <div className={styles.shape_content}>
 				  	{that.renderContent(shape)}
 				  </div>
@@ -42,7 +41,7 @@ class ContentEditor extends React.Component {
 		})
 		
 		return(	
-			<div className={styles.document_warpper} style={size}>
+			<div className={styles.page_warpper} style={size}>
 			    {shapeElements}
 			</div>		
 		);

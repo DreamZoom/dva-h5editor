@@ -6,6 +6,7 @@ import ContentEditor from '../components/ContentEditor.js';
 import ResourceList from '../components/ResourceList.js';
 import PropertyGrid from '../components/PropertyGrid.js';
 import AnimationList from '../components/AnimationList.js';
+import ResponsiveWarpper from '../components/ResponsiveWarpper.js';
 
 import { Layout, Menu, Breadcrumb, Icon, Button,Modal ,Input,Table,Upload,message,Tabs} from 'antd';
 const TabPane = Tabs.TabPane;
@@ -58,15 +59,22 @@ function Editor({ dispatch, h5 }) {
 	
 	return(
 		<Layout className={styles.page_editor}>
-		    <Header>
+		    <Header className={styles.editor_header}>
 		      <div className="logo" />
+		      <div className={styles.editor_right_tools}>
+		      	  <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"page"})}}>保存</Button>
+			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"chart"})}}>保存模板</Button>
+			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"video"})}}>发布</Button>
+			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"video"})}}>退出</Button>
+		      </div>
 		      <div className={styles.editor_tools}>
 			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"text"})}}>文本</Button>
 			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"image"})}}>图片</Button>
 			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"page"})}}>页面</Button>
-			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"video"})}}>视频</Button>
-			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"music"})}}>音乐</Button>
+			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"chart"})}}>图表</Button>
+			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"video"})}}>视频</Button>			      
 		      </div>
+		      
 		    </Header>
 		    
 		    <Layout>
@@ -75,15 +83,14 @@ function Editor({ dispatch, h5 }) {
 		        </PageList>
 		      </Sider>
 		      <Layout >		        
-		        <Content className={styles.page_content}>
-		            <div className={styles.document_main}>
-			        	<div className={styles.page_main}>
-			              <ContentEditor page={h5.selected_page_model} selected_shape={h5.selected_shape}  size={h5.config.size} onSelectShape={(shape)=>{dispatch({type: 'h5/selectShape',shape:shape})}} onEditShape={(shape)=>{dispatch({type: 'h5/editShape',shape:shape})}}></ContentEditor>
-			            </div>
-		            </div>
-		            {TextEditModal}
-		            {ResourcesEditModal}
+		        <Content className={styles.page_content} >
+		            <ResponsiveWarpper className={styles.document_main} documentSize={h5.config.size}>
+			        	 <ContentEditor page={h5.selected_page_model} selected_shape={h5.selected_shape}  size={h5.config.size} onSelectShape={(shape)=>{dispatch({type: 'h5/selectShape',shape:shape})}} onEditShape={(shape)=>{dispatch({type: 'h5/editShape',shape:shape})}} />
+		            </ResponsiveWarpper>
+		            
 		        </Content>
+		        {TextEditModal}
+		        {ResourcesEditModal}
 		      </Layout>
 		      <Sider className={styles.page_slider}>
 		        <Tabs defaultActiveKey="1" >
@@ -91,7 +98,7 @@ function Editor({ dispatch, h5 }) {
 				    	<PropertyGrid shape={h5.selected_shape_model} onPropertyChange={()=>{dispatch({type: 'h5/updateResource'})}} />
 				    </TabPane>
 				    <TabPane tab="动画" key="2">
-				    	<AnimationList shape={h5.selected_shape_model} onAnimationChange={()=>{dispatch({type: 'h5/updateResource'})}}/>
+				    	<AnimationList shape={h5.selected_shape_model} shape_ref={h5.selected_shape_model_ref} onAnimationChange={()=>{dispatch({type: 'h5/updateResource'})}}/>
 				    </TabPane>
 				</Tabs>
 		       	

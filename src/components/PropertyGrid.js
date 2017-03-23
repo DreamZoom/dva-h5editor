@@ -12,8 +12,10 @@ class PropertyGrid extends React.Component {
 	}
 	
 	handlePropertyChange=(propertyName,value)=>{
-		this.state.shape.propertys[propertyName] = value;
-		this.setState({...this.state});
+		this.props.shape.propertys[propertyName] = value;
+		this.setState({
+			shape:this.props.shape
+		});
 		this.props.onPropertyChange(propertyName,value);
 	}
 	
