@@ -4,33 +4,32 @@ import styles from './PageList.css';
 import { sortable } from 'react-sortable';
 import SortableItem from "./SortableItem.js";
 const SortablePageItem = sortable(SortableItem);
- 
- import iScroll from 'iscroll';
- import ReactIScroll from 'react-iscroll';
 
+import iScroll from 'iscroll';
+import ReactIScroll from 'react-iscroll';
 
 class PageList extends React.Component {
-	
+
 	state = {
-		draggingIndex:null,
-		data:this.props.pagelist
+		draggingIndex: null,
+		data: this.props.pagelist
+	}
+
+	updateState = (obj) => {
+		this.setState(obj);
+		if(this.props.onSortPage){
+			this.props.onSortPage();
+		}
+		
 	}
 	
-	updateState=(obj) =>  {
-		console.log(obj)
-	    this.setState(obj);
-	}
-	o={
-			 mouseWheel: true,
-             scrollbars: true
-		}
 	render() {
-		const { selected_page,pagelist, onNewPage,onSelectPage } = this.props;
-		
+		const { selected_page, pagelist, onNewPage, onSelectPage,onSortPage } = this.props;
+
 		return(
 			<div className={styles.page_list}>
 			  {
-			  	this.state.data.map((page,index)=>{			  		
+			  	this.props.pagelist.map((page,index)=>{			  		
 				  	return (
 				  		<SortablePageItem 
 				  		    updateState={this.updateState}

@@ -3,33 +3,50 @@ import EditableShape from "./EditableShape.js"
 import siteconfig from "../utils/siteconfig.js"
 
 class ContentEditor extends React.Component {
-	
-	renderContent=(shape)=>{
-		if(shape.shape_type=="text"){
-			return (<div>{shape.resource}</div>)
+
+	renderContent = (shape) => {
+		if(shape.shape_type == "text") {
+			return(<div>{shape.resource}</div>)
 		}
-		if(shape.shape_type=="image"){
-			return (<img src={siteconfig.URL(shape.resource)} />)
+		if(shape.shape_type == "image") {
+			return(<img src={siteconfig.URL(shape.resource)} />)
+		}
+		if(shape.shape_type == "page") {
+			return(
+				<div className={styles.iframe}>
+					<iframe src={siteconfig.URL(shape.resource)} className={styles.iframe}></iframe>
+					<div className={styles.mask}></div>
+				</div>
+			);
+		}
+		
+		if(shape.shape_type == "video") {
+			return(
+				<div className={styles.video}>
+					<video controls="controls" className={styles.video}>
+						<source src={siteconfig.URL(shape.resource)} type="video/mp4"></source>
+						当前浏览器不支持 video直接播放
+					</video>
+				</div>
+			);
 		}
 	}
 
 	render() {
-		const { size,page,selected_shape,onSelectShape,onEditShape} = this.props;
-		
-		if(!page){
-			return(					
+		const { size, page, selected_shape, onSelectShape, onEditShape } = this.props;
+
+		if(!page) {
+			return(
 				<div className={styles.page_warpper} style={size}>
 				    <h3 style={{textAlign:"center",fontSize:24}}>请选择页面编辑</h3>
-				</div>	
+				</div>
 			);
 		}
-		
-	    
-		
-        const that = this;
-		const shapeElements = page.shapes.map(function(shape,i){
-			
-			return(	
+
+		const that = this;
+		const shapeElements = page.shapes.map(function(shape, i) {
+
+			return(
 				<EditableShape key={i} shape={shape} active={shape.guid==selected_shape} animation={shape.preview_animation}
 					onClick={()=>{onSelectShape(shape)}}
 					onEditContent={()=>{onEditShape(shape)}}>
@@ -39,11 +56,11 @@ class ContentEditor extends React.Component {
 				</EditableShape>
 			);
 		})
-		
-		return(	
+
+		return(
 			<div className={styles.page_warpper} style={size}>
 			    {shapeElements}
-			</div>		
+			</div>
 		);
 	}
 }

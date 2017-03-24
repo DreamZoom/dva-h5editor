@@ -1,8 +1,7 @@
 import { Layout, Menu, Breadcrumb, Icon, Button, Modal, Input, Table } from 'antd';
 import jquery from 'jquery';
-import request from "../utils/request.js";
 
-class ResourceList extends React.Component {
+class PresentationList extends React.Component {
 	state = {
 		data: [],
 		pagination: {},
@@ -24,10 +23,10 @@ class ResourceList extends React.Component {
 		});
 	}
 	fetch = (params = {}) => {
-		console.log('params:', params);
+		
 		this.setState({ loading: true });
 		jquery.ajax({
-			url: 'http://localhost:6531/resource/List',
+			url: 'http://localhost:6531/Presentation/List',
 			method: 'get',
 			data: {
 				...params
@@ -48,25 +47,28 @@ class ResourceList extends React.Component {
 	componentDidMount() {
 		this.fetch();
 	}
+
 	render() {
-
-		const { onSelectResource } = this.props;
-
 		const columns = [{
-			title: '资源名称',
-			dataIndex: 'ResName',
+			title: '标题',
+			dataIndex: 'Title',
 			sorter: true
 		}, {
-			title: '资源内容',
-			dataIndex: 'ResContent'
+			title: '描述',
+			dataIndex: 'Description'
+		}, {
+			title: '访问次数',
+			dataIndex: 'Visits'
+		}, {
+			title: '所有者',
+			dataIndex: 'Owner'
 		}, {
 			title: '操作',
 			key: 'action',
 			render: (text, record) => (
-				<Button onClick={()=>{onSelectResource(record)}} >使用</Button>
+				<Button onClick={()=>{this.props.onEdit(record)}} >编辑</Button>
 			),
 		}];
-
 		return(
 			<Table columns={columns}
 		        rowKey={record => record.ID}
@@ -75,8 +77,8 @@ class ResourceList extends React.Component {
 		        loading={this.state.loading}
 		        onChange={this.handleTableChange}
 		      />
-		);
+		)
 	}
 }
 
-export default ResourceList;
+export default PresentationList;

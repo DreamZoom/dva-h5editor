@@ -1,7 +1,7 @@
 import fetch from 'dva/fetch';
-
+import jquery from 'jquery';
 function parseJSON(response) {
-  return response.json();
+  return JSON.parse(response);
 }
 
 function checkStatus(response) {
@@ -21,10 +21,23 @@ function checkStatus(response) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
+//export default function request(url, options) {
+//return fetch(url, options)
+//  .then(checkStatus)
+//  .then(parseJSON)
+//  .then(data => ({ data }))
+//  .catch(err => ({ err }));
+//}
+const API_DOMAIN = "http://localhost:6531/";
 export default function request(url, options) {
-  return fetch(url, options)
-    .then(checkStatus)
-    .then(parseJSON)
-    .then(data => ({ data }))
+	options =jquery.extend({
+		url:API_DOMAIN+url,
+		dataType: "json",
+		type:'post'
+	},options);
+  return jquery.ajax(options)
+//  .then(checkStatus)
+//  .then(parseJSON)
+    .then(data => ({ ...data }))
     .catch(err => ({ err }));
 }

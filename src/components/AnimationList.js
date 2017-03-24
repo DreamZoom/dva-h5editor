@@ -87,7 +87,8 @@ class AnimationList extends React.Component {
 			
 		});
 		const field_width=6;
-		const animation_list = this.props.shape.animations.map(function(animation,i){
+		
+		const animation_list = this.props.shape!=null?this.props.shape.animations.map(function(animation,i){
 			
 			return(
 				<Panel header={"动画"+i} key={i+1} className={styles.panel_list}>
@@ -135,7 +136,7 @@ class AnimationList extends React.Component {
 			    </Panel>
 			);
 			
-		});
+		}) : [];
 		
 		
 		return (

@@ -1,4 +1,6 @@
 import uuid from '../utils/uuid';
+import PresentationService from '../services/PresentationService.js';
+import { message} from 'antd';
 export default {
 
 	namespace: 'h5',
@@ -20,19 +22,38 @@ export default {
 
 	subscriptions: {
 		setup({ dispatch, history }) { // eslint-disable-line
+			return history.listen(({ pathname, query }) => {
+		        if (pathname === '/editor') {
+		        	
+		          dispatch({ type: 'load', payload: query.id });
+		        }
+		    });
 		},
 	},
 
 	effects: {
-		* fetch({ payload }, { call, put }) { // eslint-disable-line
-			yield put({ type: 'save' });
+		* load({ payload }, { call, put }) { // eslint-disable-line
+			const result = yield call(PresentationService.get_page,{id:payload});
+			console.log(result);
+			yield put({type:"initState", data: result.data });
 		},
+		*savePage({ payload }, { call, put }){
+			const  content = JSON.stringify(payload);
+			const  result =yield call(PresentationService.save_page,{id:1,content:content});
+			
+			yield put({type:"notify", message: result.message });
+		}
 	},
 
 	reducers: {
-		resizeDocument(state, action) {
-			//state.document_scale = action.scale;
-			console.log(12456)
+		
+		initState(state, action) {
+			const d = JSON.parse(action.data.content);
+			console.log(d);
+			return { ...d };
+		},
+		notify(state, action) {
+			message.info(action.message);
 			return { ...state };
 		},
 		addNewPage(state, action) {
@@ -60,6 +81,20 @@ export default {
 		addNewShape(state, action) {
 		
 			if(state.selected_page_model) {
+				
+				let resource = "双击编辑文本";
+				let custom_propertys={};
+				if(action.shape_type=="image"){
+					resource = "/resources/default.png";
+				}
+				if(action.shape_type=="page"){
+					resource = "/resources/default.html";
+					custom_propertys.width=200;
+					custom_propertys.width=200;
+				}
+				if(action.shape_type=="video"){
+					resource = "/resources/default.mp4";
+				}
 				state.selected_page_model.shapes.push({
 					guid: uuid.NewID(),
 					shape_type: action.shape_type,
@@ -70,12 +105,12 @@ export default {
 						top:0,
 						color:"rgba(0,0,0,1)",
 						fontSize:14,
-						rotate:0
+						rotate:0,
+						...custom_propertys
 					},
 					animations: [],
-					resource: "在此输入文本",
+					resource: resource,
 					preview_animation:""
-
 				});
 			}
 			
@@ -108,6 +143,9 @@ export default {
 			return { ...state };
 		},
 		updateResource(state, action){
+			return { ...state };
+		},
+		savePresentation(state, action){
 			return { ...state };
 		}
 

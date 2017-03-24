@@ -8,43 +8,41 @@ import PropertyGrid from '../components/PropertyGrid.js';
 import AnimationList from '../components/AnimationList.js';
 import ResponsiveWarpper from '../components/ResponsiveWarpper.js';
 
-import { Layout, Menu, Breadcrumb, Icon, Button,Modal ,Input,Table,Upload,message,Tabs} from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Button, Modal, Input, Table, Upload, message, Tabs } from 'antd';
 const TabPane = Tabs.TabPane;
 const { Header, Content, Footer, Sider } = Layout;
 
-function Editor({ dispatch, h5 }) {
-	
+function Editor({ dispatch, h5, location }) {
 
-	
-	const TextEditModal=(
+	const TextEditModal = (
 		<Modal title="编辑内容" visible={h5.text_editor_visible} onOk={()=>{dispatch({type: 'h5/endEditShape'})}} onCancel={()=>{dispatch({type: 'h5/endEditShape'})}}>
           <Input type="textarea" placeholder="请输入内容" autosize value={h5.selected_shape_model?h5.selected_shape_model.resource:""} onChange={(evt)=>{dispatch({type: 'h5/updateShapeContent',resource: evt.target.value})}}/>
         </Modal>
 	);
-	
+
 	const upload_props = {
-	  name: 'resource',
-	  action: 'http://localhost:6531/resource/UploadResource',
-	  headers: {
-	    authorization: 'authorization-text',
-	  },
-	  data:{
-	  	res_type:h5.resource_editor_type
-	  },
-	  onChange(info) {
-	    if (info.file.status !== 'uploading') {
-	      console.log(info.file, info.fileList);
-	    }
-	    if (info.file.status === 'done') {
-	      message.success(`${info.file.name} 文件上传成功`);
-	      dispatch({type: 'h5/updateResource'});
-	    } else if (info.file.status === 'error') {
-	      message.error(`${info.file.name} 文件上传失败.`);
-	    }
-	  },
+		name: 'resource',
+		action: 'http://localhost:6531/resource/UploadResource',
+		headers: {
+			authorization: 'authorization-text',
+		},
+		data: {
+			res_type: h5.resource_editor_type
+		},
+		onChange(info) {
+			if(info.file.status !== 'uploading') {
+				console.log(info.file, info.fileList);
+			}
+			if(info.file.status === 'done') {
+				message.success(`${info.file.name} 文件上传成功`);
+				dispatch({ type: 'h5/updateResource' });
+			} else if(info.file.status === 'error') {
+				message.error(`${info.file.name} 文件上传失败.`);
+			}
+		},
 	};
 
-	const ResourcesEditModal=(
+	const ResourcesEditModal = (
 		<Modal title="编辑内容" visible={h5.resource_editor_visible} onOk={()=>{dispatch({type: 'h5/endEditShape'})}} onCancel={()=>{dispatch({type: 'h5/endEditShape'})}}>
 		  <div className={styles.padding}>
 	          <Upload {...upload_props} showUploadList={false}>
@@ -56,13 +54,13 @@ function Editor({ dispatch, h5 }) {
           <ResourceList onSelectResource={(res)=>{dispatch({type: 'h5/updateShapeContent',resource: res.ResContent});dispatch({type: 'h5/endEditShape',resource: res.ResContent})}} />
         </Modal>
 	);
-	
+
 	return(
 		<Layout className={styles.page_editor}>
 		    <Header className={styles.editor_header}>
 		      <div className="logo" />
 		      <div className={styles.editor_right_tools}>
-		      	  <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"page"})}}>保存</Button>
+		      	  <Button ghost={true} onClick={()=>{dispatch({type: 'h5/savePage',payload:h5})}}>保存</Button>
 			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"chart"})}}>保存模板</Button>
 			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"video"})}}>发布</Button>
 			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/addNewShape',shape_type:"video"})}}>退出</Button>
@@ -79,7 +77,7 @@ function Editor({ dispatch, h5 }) {
 		    
 		    <Layout>
 		      <Sider className={styles.page_slider}>
-		        <PageList pagelist={h5.pages} selected_page={h5.selected_page} onNewPage={()=>{dispatch({type: 'h5/addNewPage'})}} onSelectPage={(page)=>{dispatch({type: 'h5/selectPage',page:page})}}>
+		        <PageList pagelist={h5.pages} selected_page={h5.selected_page} onNewPage={()=>{dispatch({type: 'h5/addNewPage'})}} onSelectPage={(page)=>{dispatch({type: 'h5/selectPage',page:page})}}  onSortPage={()=>{dispatch({type: 'h5/updateResource'})}}>
 		        </PageList>
 		      </Sider>
 		      <Layout >		        
