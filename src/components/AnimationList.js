@@ -11,20 +11,6 @@ class AnimationList extends React.Component {
 		shape:this.props.shape
 	}
 	
-	convertAnimation=(ani_prop,value)=>{
-		
-		if(ani_prop=="duration"){
-			return value+"s";
-		}
-		if(ani_prop=="delay"){
-			return value+"s";
-		}
-		if(ani_prop=="iterationCount" && value==0){
-			
-			return "infinite";
-		}
-		return value;
-	}
 	
 	handleAddAnimation=()=>{
 		
@@ -52,12 +38,9 @@ class AnimationList extends React.Component {
 	}
 	
 	handleRemoveAnimation=(index)=>{
-		console.log(this.state.shape.animations);
-		console.log(index);
 		this.state.shape.animations =this.state.shape.animations.filter(function(el,i){
 			return i!=index;
 		});
-
 		this.setState({...this.state});
 		this.props.onAnimationChange();
 	}
@@ -73,8 +56,7 @@ class AnimationList extends React.Component {
 	render() {
 		
 		const that = this;
-		const animation_options=animations.ANIMATION_LIST.map(function(group,i){
-			
+		const animation_options=animations.ANIMATION_LIST.map(function(group,i){			
 			return (
 				<OptGroup label={group.groupName} key={i}>
 			     {

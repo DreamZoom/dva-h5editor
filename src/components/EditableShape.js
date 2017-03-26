@@ -8,7 +8,7 @@ import animations from "../utils/animations.js"
 class EditableShape extends React.Component {
     
     state={
-    	propertys:this.props.shape.propertys,
+    	propertys:{...this.props.shape.propertys},
     	postion:{left:0,top:0,width:0,height:0}
     }
     onMouseDown=(e)=>{
@@ -17,12 +17,17 @@ class EditableShape extends React.Component {
 	    	const px = e.pageX-that.state.postion.left;
 	    	const py = e.pageY-that.state.postion.top;
 	    	
-	        that.state.propertys.left=px;
-	    	that.state.propertys.top=py;
-	    	
 	    	that.setState({
-	             ...that.state
+	             propertys:{
+	             	...that.propertys,
+	             	left:px,
+	             	top:py
+	             }
 	    	});
+	    	
+	    	if(that.props.onPropertyChange){
+	    		that.props.onPropertyChange(that.state.propertys);
+	    	}
 	    }
     	const onMouseUp=(e)=>{
 	    	document.removeEventListener("mousemove",onMouseMove)
@@ -47,19 +52,39 @@ class EditableShape extends React.Component {
 	    	const px = e.pageX-down_evt.pageX;
 	    	const py = e.pageY-down_evt.pageY;
 	    	
-	    	const resizeUp=(propertys,posi)=>{
-	    		propertys.top=that.state.postion.top+posi.py;
-	    		propertys.height=that.state.postion.height-posi.py;
+	    	const resizeUp=(propertys,posi)=>{	    	
+	    		that.setState({
+		             propertys:{
+		             	...that.propertys,
+		             	height:that.state.postion.height-posi.py,
+		             	top:that.state.postion.top+posi.py
+		             }
+		    	});
 	    	}
 	    	const resizeDown=(propertys,posi)=>{
-	    		propertys.height=that.state.postion.height+posi.py;
+	    		that.setState({
+		             propertys:{
+		             	...that.propertys,
+		             	height:that.state.postion.height+posi.py
+		             }
+		    	});
 	    	}
 	    	const resizeLeft=(propertys,posi)=>{
-	    		propertys.left=that.state.postion.left+posi.px;
-	    		propertys.width=that.state.postion.width-posi.px;
+	    		that.setState({
+		             propertys:{
+		             	...that.propertys,
+		             	left:that.state.postion.left+posi.px,
+		             	width:that.state.postion.width-posi.px
+		             }
+		    	});
 	    	}
 	    	const resizeRight=(propertys,posi)=>{
-	    		propertys.width=that.state.postion.width+posi.px;
+	    		that.setState({
+		             propertys:{
+		             	...that.propertys,
+		             	width:that.state.postion.width+posi.px
+		             }
+		    	});
 	    	}
 	    	switch(resizehv){
 	    		case "n":
@@ -92,9 +117,9 @@ class EditableShape extends React.Component {
 	    			break;
 	    	}
 	        
-	    	that.setState({
-	             ...that.state
-	    	});
+	    	if(that.props.onPropertyChange){
+	    		that.props.onPropertyChange(that.state.propertys);
+	    	}
 	    }
     	const onMouseUp=(e)=>{
 	    	document.removeEventListener("mousemove",onMouseMove)
@@ -119,10 +144,15 @@ class EditableShape extends React.Component {
     	const onMouseMove=(e)=>{
 	    	const px = e.pageX-that.state.postion.centerX;
 	    	const py = e.pageY-that.state.postion.centerY;
-	    	that.state.propertys.rotate=Math.atan2(py,px) *(180.0/ Math.PI )+90;
 	    	that.setState({
-	             ...that.state
+	    		propertys:{
+	    			...that.state.propertys,
+	    			rotate:Math.atan2(py,px) *(180.0/ Math.PI )+90
+	    		}
 	    	});
+	    	if(that.props.onPropertyChange){
+	    		that.props.onPropertyChange(that.state.propertys);
+	    	}
 	    }
     	const onMouseUp=(e)=>{
 	    	document.removeEventListener("mousemove",onMouseMove)
@@ -161,9 +191,9 @@ class EditableShape extends React.Component {
 			</div>
 		);
 		
-		const {rotate}=this.state.propertys;
+		const {rotate}=this.props.shape.propertys;
 		const animation_style = {"animation":animation};
-		const custom_styles ={transform:"rotateZ("+rotate+"deg)",...this.state.propertys}
+		const custom_styles ={transform:"rotateZ("+rotate+"deg)",...this.props.shape.propertys}
 		
 		return(	
 			<div ref="dragElement" className={"shape "+styles.shape+(active?" selected":"")} style={custom_styles} onMouseDown={this.onMouseDown} onClick={onClick} onDoubleClick={onEditContent} >

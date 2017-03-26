@@ -13,10 +13,20 @@ const TabPane = Tabs.TabPane;
 const { Header, Content, Footer, Sider } = Layout;
 
 function Editor({ dispatch, h5, location }) {
+	
+   let selected_pages = h5.pages.filter(function(page){return page.guid==h5.selected_page});
+   let selected_page_model = selected_pages.length==0?null:selected_pages[0];
+   
+  
+   let selected_shape_model = null;
+   if(selected_pages.length!=0){
+   	 	let selected_shapes = selected_page_model.shapes.filter(function(shape){return shape.guid==h5.selected_shape});
+   	 	selected_shape_model =selected_shapes.length==0?null:selected_shapes[0];
+   }
 
 	const TextEditModal = (
 		<Modal title="编辑内容" visible={h5.text_editor_visible} onOk={()=>{dispatch({type: 'h5/endEditShape'})}} onCancel={()=>{dispatch({type: 'h5/endEditShape'})}}>
-          <Input type="textarea" placeholder="请输入内容" autosize value={h5.selected_shape_model?h5.selected_shape_model.resource:""} onChange={(evt)=>{dispatch({type: 'h5/updateShapeContent',resource: evt.target.value})}}/>
+          <Input type="textarea" placeholder="请输入内容" autosize value={selected_shape_model?selected_shape_model.resource:""} onChange={(evt)=>{dispatch({type: 'h5/updateShapeContent',resource: evt.target.value})}}/>
         </Modal>
 	);
 
@@ -51,7 +61,7 @@ function Editor({ dispatch, h5, location }) {
 			    </Button>
 			  </Upload>
 		  </div>
-          <ResourceList onSelectResource={(res)=>{dispatch({type: 'h5/updateShapeContent',resource: res.ResContent});dispatch({type: 'h5/endEditShape',resource: res.ResContent})}} />
+          <ResourceList res_type={h5.resource_editor_type} onSelectResource={(res)=>{dispatch({type: 'h5/updateShapeContent',resource: res.ResContent});dispatch({type: 'h5/endEditShape',resource: res.ResContent})}} />
         </Modal>
 	);
 
@@ -77,13 +87,22 @@ function Editor({ dispatch, h5, location }) {
 		    
 		    <Layout>
 		      <Sider className={styles.page_slider}>
-		        <PageList pagelist={h5.pages} selected_page={h5.selected_page} onNewPage={()=>{dispatch({type: 'h5/addNewPage'})}} onSelectPage={(page)=>{dispatch({type: 'h5/selectPage',page:page})}}  onSortPage={()=>{dispatch({type: 'h5/updateResource'})}}>
+		        <PageList pagelist={h5.pages} selected_page_guid={h5.selected_page} onNewPage={()=>{dispatch({type: 'h5/addNewPage'})}} onSelectPage={(page)=>{dispatch({type: 'h5/selectPage',page:page})}}  onSortPage={()=>{dispatch({type: 'h5/updateResource'})}}>
 		        </PageList>
 		      </Sider>
 		      <Layout >		        
 		        <Content className={styles.page_content} >
-		            <ResponsiveWarpper className={styles.document_main} documentSize={h5.config.size}>
-			        	 <ContentEditor page={h5.selected_page_model} selected_shape={h5.selected_shape}  size={h5.config.size} onSelectShape={(shape)=>{dispatch({type: 'h5/selectShape',shape:shape})}} onEditShape={(shape)=>{dispatch({type: 'h5/editShape',shape:shape})}} />
+		            <ResponsiveWarpper 
+		                 className={styles.document_main} 
+		                 documentSize={h5.config.size}
+		                 onClick={()=>{}}>
+			        	 <ContentEditor 
+				        	 page={selected_page_model}
+				        	 selected_shape={h5.selected_shape}  
+				        	 size={h5.config.size}
+				        	 onSelectShape={(shape)=>{dispatch({type: 'h5/selectShape',shape:shape})}} 
+				        	 onPropertyChange={(propertys)=>{dispatch({type: 'h5/updateShapePropertys',propertys:propertys})}} 
+				        	 onEditShape={(shape)=>{dispatch({type: 'h5/editShape',shape:shape})}} />
 			        	 
 		            </ResponsiveWarpper>
 		            
@@ -94,10 +113,10 @@ function Editor({ dispatch, h5, location }) {
 		      <Sider className={styles.page_slider}>
 		        <Tabs defaultActiveKey="1" >
 				    <TabPane tab="属性" key="1">
-				    	<PropertyGrid shape={h5.selected_shape_model} onPropertyChange={()=>{dispatch({type: 'h5/updateResource'})}} />
+				    	<PropertyGrid shape={selected_shape_model} onPropertyChange={()=>{dispatch({type: 'h5/updateResource'})}} />
 				    </TabPane>
 				    <TabPane tab="动画" key="2">
-				    	<AnimationList shape={h5.selected_shape_model} shape_ref={h5.selected_shape_model_ref} onAnimationChange={()=>{dispatch({type: 'h5/updateResource'})}}/>
+				    	<AnimationList shape={selected_shape_model} onAnimationChange={()=>{dispatch({type: 'h5/updateResource'})}}/>
 				    </TabPane>
 				</Tabs>
 		       	

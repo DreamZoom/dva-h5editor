@@ -52,7 +52,7 @@ class ResponsiveWarpper extends React.Component {
 	}
 	render() {
 		return(
-			<div ref="warpper" className={this.props.className} style={{...this.state}}>
+			<div ref="warpper" className={this.props.className} style={{...this.state}} onClick={this.props.onClick}>
 				<div style={{padding:50,float:'left',...this.state.style}}>
 				    {this.props.children}
 				</div>

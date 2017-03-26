@@ -21,6 +21,7 @@ class ResourceList extends React.Component {
 			sortField: sorter.field,
 			sortOrder: sorter.order,
 			...filters,
+			res_type:this.props.res_type
 		});
 	}
 	fetch = (params = {}) => {
@@ -46,7 +47,10 @@ class ResourceList extends React.Component {
 		});
 	}
 	componentDidMount() {
-		this.fetch();
+		this.fetch({
+			res_type:this.props.res_type,
+			page:1
+		});
 	}
 	render() {
 

@@ -48,9 +48,28 @@ export default {
 	reducers: {
 		
 		initState(state, action) {
-			const d = JSON.parse(action.data.content);
-			console.log(d);
-			return { ...d };
+			try{
+				const d = JSON.parse(action.data.content);
+				console.log(d);
+				return { ...d };
+			}catch(e){
+				var defaultState ={
+					config: {
+						size: {
+							width: 320,
+							height: 480
+						}
+					},
+					pages: [],
+					selected_page: "",
+					selected_shape: "",
+					text_editor_visible:false,
+					resource_editor_visible:false,
+					document_scale:1.0
+				};
+				return { ...defaultState };
+			}
+			
 		},
 		notify(state, action) {
 			message.info(action.message);
@@ -72,6 +91,8 @@ export default {
 		selectPage(state, action) {
 			state.selected_page = action.page.guid;
 			state.selected_page_model = action.page;
+			state.selected_shape = "";		
+			state.selected_shape_model = null;	
 			return { ...state };
 		},
 		removePage(state, action) {
@@ -119,6 +140,19 @@ export default {
 		selectShape(state, action){
 			state.selected_shape = action.shape.guid;		
 			state.selected_shape_model = action.shape;	
+			return { ...state };
+		},
+		unselectShape(state, action){
+			state.selected_shape ="";		
+			state.selected_shape_model = null;	
+			return { ...state };
+		},
+		updateShapePropertys(state, action){
+			console.log(action.propertys)
+			if(state.selected_shape_model)	{
+				state.selected_shape_model.propertys={...state.selected_shape_model.propertys,...action.propertys}
+			}	
+//			console.log(state.selected_shape_model)
 			return { ...state };
 		},
 		editShape(state, action){

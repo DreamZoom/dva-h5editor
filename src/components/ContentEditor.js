@@ -33,7 +33,7 @@ class ContentEditor extends React.Component {
 	}
 
 	render() {
-		const { size, page, selected_shape, onSelectShape, onEditShape } = this.props;
+		const { size, page, selected_shape, onSelectShape, onEditShape,onPropertyChange } = this.props;
 
 		if(!page) {
 			return(
@@ -47,8 +47,9 @@ class ContentEditor extends React.Component {
 		const shapeElements = page.shapes.map(function(shape, i) {
 
 			return(
-				<EditableShape key={i} shape={shape} active={shape.guid==selected_shape} animation={shape.preview_animation}
+				<EditableShape key={i} shape={shape} active={shape.guid==selected_shape}
 					onClick={()=>{onSelectShape(shape)}}
+					onPropertyChange={(propertys)=>{onPropertyChange(propertys)}}
 					onEditContent={()=>{onEditShape(shape)}}>
 				  <div className={styles.shape_content}>
 				  	{that.renderContent(shape)}

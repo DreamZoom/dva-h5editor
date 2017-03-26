@@ -24,7 +24,7 @@ class PageList extends React.Component {
 	}
 	
 	render() {
-		const { selected_page, pagelist, onNewPage, onSelectPage,onSortPage } = this.props;
+		const { selected_page_guid, pagelist, onNewPage, onSelectPage,onSortPage } = this.props;
 
 		return(
 			<div className={styles.page_list}>
@@ -37,7 +37,7 @@ class PageList extends React.Component {
 				  		    key={index} 
 				  		    sortId={index} 
 				  		    items={this.state.data} outline="list">
-				  			<PageItem onClick={()=>{onSelectPage(page)}}  page={page} active={(selected_page==page.guid)} num={index+1}/> 
+				  			<PageItem onClick={()=>{onSelectPage(page)}}  page={page} active={(selected_page_guid==page.guid)} num={index+1}/> 
 				  		</SortablePageItem>
 				  	)
 			  	})
