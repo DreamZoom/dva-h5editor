@@ -1,11 +1,14 @@
-import { Layout, Menu, Breadcrumb, Icon, Button, Modal, Input, Table } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Button, Modal, Input, Table,Upload ,message} from 'antd';
 import jquery from 'jquery';
 import request from "../utils/request.js";
-
+import siteconfig from "../utils/siteconfig.js"
 class ResourceList extends React.Component {
 	state = {
 		data: [],
-		pagination: {},
+		pagination: {
+			current:1,
+			pageSize:5
+		},
 		loading: false,
 	}
 	handleTableChange = (pagination, filters, sorter) => {
@@ -20,25 +23,24 @@ class ResourceList extends React.Component {
 			page: pagination.current,
 			sortField: sorter.field,
 			sortOrder: sorter.order,
-			...filters,
-			res_type:this.props.res_type
+			...filters			
 		});
 	}
 	fetch = (params = {}) => {
-		console.log('params:', params);
+		
 		this.setState({ loading: true });
 		jquery.ajax({
-			url: 'http://localhost:6531/resource/List',
+			url: siteconfig.SITE_RESOURCE_MANAGER_API+'/List',
 			method: 'get',
 			data: {
+				page:this.state.pagination.current,
+				pagesize: this.state.pagination.pageSize,
+				res_type: this.props.res_type,
 				...params
 			},
 			dataType: "jsonp",
 		}).then((response) => {
-			const pagination = { ...this.state.pagination };
-			// Read total count from server
-			pagination.total = response.data.total;
-			//pagination.total = 200;
+			const pagination = { ...this.state.pagination,total:response.data.total };
 			this.setState({
 				loading: false,
 				data: response.data.rows,
@@ -47,10 +49,7 @@ class ResourceList extends React.Component {
 		});
 	}
 	componentDidMount() {
-		this.fetch({
-			res_type:this.props.res_type,
-			page:1
-		});
+		this.fetch();
 	}
 	render() {
 
@@ -70,15 +69,48 @@ class ResourceList extends React.Component {
 				<Button onClick={()=>{onSelectResource(record)}} >使用</Button>
 			),
 		}];
+		
+		const that = this;
+
+		const upload_props = {
+			name: 'resource',
+			action: siteconfig.SITE_RESOURCE_MANAGER_API+'/UploadResource',
+			headers: {
+				authorization: 'authorization-text',
+			},
+			data: {
+				res_type: this.props.res_type
+			},
+			onChange(info) {
+				if(info.file.status !== 'uploading') {
+					console.log(info.file, info.fileList);
+				}
+				if(info.file.status === 'done') {
+					message.success(`${info.file.name} 文件上传成功`);
+					that.fetch();
+				} else if(info.file.status === 'error') {
+					message.error(`${info.file.name} 文件上传失败.`);
+				}
+			},
+		};
 
 		return(
-			<Table columns={columns}
-		        rowKey={record => record.ID}
-		        dataSource={this.state.data}
-		        pagination={this.state.pagination}
-		        loading={this.state.loading}
-		        onChange={this.handleTableChange}
-		      />
+			<div>
+			 	<div style={{padding:10}}>
+		          <Upload {...upload_props} showUploadList={false}>
+				    <Button>
+				      <Icon type="upload" />上传资源
+				    </Button>
+				  </Upload>
+				</div>
+				<Table columns={columns}
+			        rowKey={record => record.ID}
+			        dataSource={this.state.data}
+			        pagination={this.state.pagination}
+			        loading={this.state.loading}
+			        onChange={this.handleTableChange}
+			      />
+		    </div>
 		);
 	}
 }

@@ -7,7 +7,7 @@ class PageList extends React.Component {
 		return(	
 				<div className={styles.page_item} onClick={this.props.onClick}>
 				  <span className={`${styles.page_item_num} ${active?styles.page_item_num_active:""}`}><span className={styles.page_item_num_em}>{num}</span></span>
-				  <span className={styles.page_item_title}>{page.title}</span>
+				  <span className={styles.page_item_title}>页面{num}</span>
 				</div>		
 		);
 	}

@@ -22,7 +22,7 @@ const app = dva({
 // 3. Model
 app.model(require('./models/example'));
 app.model(require('./models/presentation'));
-
+app.model(require('./models/show'));
 // 4. Router
 app.router(require('./router'));
 

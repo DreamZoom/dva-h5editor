@@ -1,4 +1,5 @@
 import uuid from '../utils/uuid';
+import { routerRedux } from 'dva/router';
 import PresentationService from '../services/PresentationService.js';
 import { message} from 'antd';
 export default {
@@ -17,15 +18,19 @@ export default {
 		selected_shape: "",
 		text_editor_visible:false,
 		resource_editor_visible:false,
-		document_scale:1.0
+		document_scale:1.0,
+		pageid:0
 	},
 
 	subscriptions: {
 		setup({ dispatch, history }) { // eslint-disable-line
 			return history.listen(({ pathname, query }) => {
-		        if (pathname === '/editor') {
+		        if (pathname === '/editor' && query.id>0) {
 		        	
 		          dispatch({ type: 'load', payload: query.id });
+		        }
+		        else{
+		          dispatch({ type: 'initState', payload: {...query} });
 		        }
 		    });
 		},
@@ -35,13 +40,16 @@ export default {
 		* load({ payload }, { call, put }) { // eslint-disable-line
 			const result = yield call(PresentationService.get_page,{id:payload});
 			console.log(result);
-			yield put({type:"initState", data: result.data });
+			yield put({type:"initState", data: result.data,pageid:payload });
 		},
 		*savePage({ payload }, { call, put }){
 			const  content = JSON.stringify(payload);
-			const  result =yield call(PresentationService.save_page,{id:1,content:content});
+			const  result =yield call(PresentationService.save_page,{id:payload.pageid,content:content});
 			
 			yield put({type:"notify", message: result.message });
+		},
+		*goHome({ payload }, { call, put }) { // eslint-disable-line			
+			yield put(routerRedux.push({pathname:'/',query:{...payload}}));
 		}
 	},
 
@@ -50,14 +58,14 @@ export default {
 		initState(state, action) {
 			try{
 				const d = JSON.parse(action.data.content);
-				console.log(d);
+				state.pageid=action.pageid;
 				return { ...d };
 			}catch(e){
 				var defaultState ={
 					config: {
 						size: {
-							width: 320,
-							height: 480
+							width: action.width||320,
+							height: action.height||480
 						}
 					},
 					pages: [],
@@ -65,7 +73,8 @@ export default {
 					selected_shape: "",
 					text_editor_visible:false,
 					resource_editor_visible:false,
-					document_scale:1.0
+					document_scale:1.0,
+					pageid:action.id
 				};
 				return { ...defaultState };
 			}
@@ -78,7 +87,7 @@ export default {
 		addNewPage(state, action) {
 			state.pages.push({
 				guid: uuid.NewID(),
-				title: "new page" + uuid.NewID(),
+				title: "页面标题",
 				shapes: [],
 				propertys: {
 					backgroundColor: "",

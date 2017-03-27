@@ -66,7 +66,10 @@ class PresentationList extends React.Component {
 			title: '操作',
 			key: 'action',
 			render: (text, record) => (
-				<Button onClick={()=>{this.props.onEdit(record)}} >编辑</Button>
+				<div>
+				<Button key={1} onClick={()=>{this.props.onEdit(record)}} >编辑</Button>
+				<Button key={2} onClick={()=>{this.props.onShow(record)}} >查看</Button>
+				</div>
 			),
 		}];
 		return(
