@@ -11,6 +11,9 @@ export default {
 			size: {
 				width: 320,
 				height: 480
+			},
+			propertys:{
+				
 			}
 		},
 		pages: [],
@@ -25,13 +28,11 @@ export default {
 	subscriptions: {
 		setup({ dispatch, history }) { // eslint-disable-line
 			return history.listen(({ pathname, query }) => {
-		        if (pathname === '/editor' && query.id>0) {
-		        	
-		          dispatch({ type: 'load', payload: query.id });
+				console.log(query);
+		        if (pathname === '/editor') {		        	
+		          	dispatch({ type: 'load', payload: query.id });
 		        }
-		        else{
-		          dispatch({ type: 'initState', payload: {...query} });
-		        }
+		        
 		    });
 		},
 	},
@@ -43,9 +44,10 @@ export default {
 			yield put({type:"initState", data: result.data,pageid:payload });
 		},
 		*savePage({ payload }, { call, put }){
+			console.log(payload);
 			const  content = JSON.stringify(payload);
-			const  result =yield call(PresentationService.save_page,{id:payload.pageid,content:content});
 			
+			const  result =yield call(PresentationService.save_page,{id:payload.pageid,content:content});		
 			yield put({type:"notify", message: result.message });
 		},
 		*goHome({ payload }, { call, put }) { // eslint-disable-line			
@@ -58,7 +60,7 @@ export default {
 		initState(state, action) {
 			try{
 				const d = JSON.parse(action.data.content);
-				state.pageid=action.pageid;
+				d.pageid=action.pageid;
 				return { ...d };
 			}catch(e){
 				var defaultState ={

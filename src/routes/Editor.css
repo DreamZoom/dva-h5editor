@@ -1,3 +1,10 @@
+.logo {
+	float: left;
+	font-size: 20px;
+	color: white;
+	padding-left: 20px;
+}
+
 .page_editor {
 	height: 100%;
 }
@@ -36,7 +43,7 @@
 }
 
 .document_main {
-    overflow: auto;
+	overflow: auto;
 }
 
 .page_main {
@@ -45,9 +52,11 @@
 	width: 100%;
 	height: 100%;
 }
-.editor_header{
-padding: 0;
+
+.editor_header {
+	padding: 0;
 }
+
 .editor_tools {
 	text-align: center;
 	width: 50%;
@@ -62,9 +71,10 @@ padding: 0;
 	padding: 10px;
 }
 
-.editor_right_tools{
+.editor_right_tools {
 	float: right;
 }
+
 .editor_right_tools button {
 	margin-right: 10px;
 }

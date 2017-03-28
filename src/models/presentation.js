@@ -8,7 +8,9 @@ export default {
 	state: {
 		createing: false,
 		width:360,
-		height:640
+		height:640,
+		title:"新页面",
+		desc:"新页面"
 	},
 
 	subscriptions: {
@@ -41,8 +43,8 @@ export default {
 			};
 			var body = JSON.stringify(defaultState);
 			
-			const result = yield call(PresentationService.create_page,{Title:"",Description:"",Body:body,Visits:99,Owner:"",...payload});
-			console.log(result);
+			const result = yield call(PresentationService.create_page,{body:body,Visits:99,Owner:"",...payload});
+			yield put({type: 'presentation/end_create'});
 			yield put(routerRedux.push({ pathname: '/editor', query: { id:result.data.ID } }));
 		}
 	},

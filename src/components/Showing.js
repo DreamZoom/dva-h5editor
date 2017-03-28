@@ -3,7 +3,8 @@ import Swiper from 'react-id-swiper';
 import ShapeRender from "../utils/ShapeRender.js"
 import AnimationProperty from "./AnimationProperty.js"
 import styles from './Showing.css';
-import animations from "../utils/animations.js"
+import animations from "../utils/animations.js";
+import jquery from 'jquery';
 class Showing extends React.Component {
 
 	renderContent = (shape) => {
@@ -15,15 +16,15 @@ class Showing extends React.Component {
 		const that = this;
 		const params = {
 			direction: 'vertical',
-			slidesPerView: 1,
-			paginationClickable: true,
-			spaceBetween: 30,
+			noSwiping: true,
+    		noSwipingClass: 'swipe-no-swiping',
+    		loop:true,
 			mousewheelControl: true,
 			effect: 'cube',
-			onInit:function(){
+			onInit: function() {
 				animations.previewPageAnimation();
 			},
-			onSlideChangeEnd:function(){
+			onSlideChangeEnd: function() {
 				animations.previewPageAnimation();
 			}
 		};
@@ -58,14 +59,29 @@ class Showing extends React.Component {
 			});
 
 			return(
-				<div className={styles.swiper} style={this.props.data.config.size}>
-		      		<Swiper {...params}>
-		      	 		{pagelist}
-		      	 	</Swiper>
-		      </div>
+				<div className={styles.showpage_warpper} ref="warpper">
+					<div className={styles.swiper} style={this.props.data.config.size} ref="page">
+			      		<Swiper {...params}>
+			      	 		{pagelist}
+			      	 	</Swiper>
+			        </div>
+		        </div>
 			);
 		}
 
+	}
+	
+	
+	componentDidUpdate(){
+		var  warpper = this.refs.warpper;
+		var  page = this.refs.page;		
+		var scaleWidth=warpper.offsetWidth/page.offsetWidth;
+		var scaleHeight=warpper.offsetHeight/page.offsetHeight;	
+		var scale =1;
+		scale= Math.min(scaleWidth,scaleHeight);
+		jquery(page).css({
+			transform:"translate(-50%, -50%) scale("+scale+")"
+		})
 	}
 }
 

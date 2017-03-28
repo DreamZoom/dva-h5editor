@@ -41,8 +41,9 @@ function Editor({ dispatch, h5, location }) {
 	return(
 		<Layout className={styles.page_editor}>
 		    <Header className={styles.editor_header}>
-		      <div className="logo" />
+		      <div className={styles.logo}>Presentation编辑器</div>
 		      <div className={styles.editor_right_tools}>
+		      	  <Button ghost={true} onClick={()=>{dispatch({type: 'h5/savePage',payload:h5})}}>设置</Button>
 		      	  <Button ghost={true} onClick={()=>{dispatch({type: 'h5/savePage',payload:h5})}}>保存</Button>
 			      <Button ghost={true} onClick={()=>{dispatch({type: 'h5/goHome'})}}>退出</Button>
 		      </div>
