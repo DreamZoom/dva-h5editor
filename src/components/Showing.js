@@ -32,8 +32,8 @@ class Showing extends React.Component {
 		if(this.props.data == null) {
 			return(
 				<div>
-		      	当前无数据
-		      </div>
+			      	当前无数据
+			    </div>
 			)
 		} else {
 

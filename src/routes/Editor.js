@@ -8,6 +8,8 @@ import PropertyGrid from '../components/PropertyGrid.js';
 import AnimationList from '../components/AnimationList.js';
 import ResponsiveWarpper from '../components/ResponsiveWarpper.js';
 
+import ChartEditor from '../components/ChartEditor.js';
+
 import { Layout, Menu, Breadcrumb, Icon, Button, Modal, Input, Table, Upload, message, Tabs } from 'antd';
 const TabPane = Tabs.TabPane;
 const { Header, Content, Footer, Sider } = Layout;
@@ -36,6 +38,11 @@ function Editor({ dispatch, h5, location }) {
 		<Modal title="编辑内容" visible={h5.resource_editor_visible} onOk={()=>{dispatch({type: 'h5/endEditShape'})}} onCancel={()=>{dispatch({type: 'h5/endEditShape'})}}>		 
           <ResourceList res_type={h5.resource_editor_type} onSelectResource={(res)=>{dispatch({type: 'h5/updateShapeContent',resource: res.ResContent});dispatch({type: 'h5/endEditShape',resource: res.ResContent})}} />
         </Modal>
+	);
+	
+	const ChartEditModal = (
+		<ChartEditor title="编辑内容" visible={h5.chart_editor_visible} onOk={(config)=>{dispatch({type: 'h5/updateShapeContent',resource: config});dispatch({type: 'h5/endEditShape'})}} onCancel={()=>{dispatch({type: 'h5/endEditShape'})}}>
+        </ChartEditor>
 	);
 
 	return(
@@ -79,6 +86,7 @@ function Editor({ dispatch, h5, location }) {
 		            </ResponsiveWarpper>
 		            
 		        </Content>
+		        {ChartEditModal}
 		        {TextEditModal}
 		        {ResourcesEditModal}
 		      </Layout>

@@ -21,6 +21,7 @@ export default {
 		selected_shape: "",
 		text_editor_visible:false,
 		resource_editor_visible:false,
+		chat_editor_visible:false,
 		document_scale:1.0,
 		pageid:0
 	},
@@ -176,11 +177,15 @@ export default {
 				state.resource_editor_type=action.shape.shape_type;
 				
 			}
+			if(action.shape.shape_type=="chart"){
+				state.chart_editor_visible = true;
+			}
 			return { ...state };
 		},
 		endEditShape(state, action){
 			state.text_editor_visible = false;
 			state.resource_editor_visible = false;
+			state.chart_editor_visible =false;
 			return { ...state };
 		},
 		updateShapeContent(state, action){

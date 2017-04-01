@@ -3,7 +3,9 @@ import styles from './PropertyGrid.css';
 import propertyHelper from "../utils/propertyHelper.js";
 class PropertyGrid extends React.Component {
 	state={
-		shape:this.props.shape
+		shape:this.props.shape,
+		propertys:this.props.propertys,
+		metadata:this.props.propertys
 	}
 	
 	getPropertyValue=(propertyName)=>{

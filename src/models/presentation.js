@@ -22,9 +22,9 @@ export default {
 		* edit({ payload }, { call, put }) { // eslint-disable-line			
 			yield put(routerRedux.push({ pathname: '/editor', query: { ...payload } }));
 		},
-		* show({ payload }, { call, put }) { // eslint-disable-line			
-			yield put(routerRedux.push({ pathname: '/show', query: { ...payload } }));
-		},
+//		* show({ payload }, { call, put }) { // eslint-disable-line			
+//			yield put(routerRedux.push({ pathname: '/show', query: { ...payload } }));
+//		},
 		* go_create({ payload }, { call, put }) { // eslint-disable-line
 			
 			var defaultState ={
@@ -64,6 +64,10 @@ export default {
 		},
 		set_height(state, action){
 			state.height=action.height;
+			return { ...state };
+		},
+		show(state, action){
+			window.location.href = (window.H5_SITE_URL||"http://localhost:6531/")+"Home/Showing#/?id="+action.payload.id;
 			return { ...state };
 		}
 	},
